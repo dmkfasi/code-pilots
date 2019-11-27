@@ -1,17 +1,15 @@
 <?php
 
-phpinfo();
-
-require_once 'Response.php';
+// Basic bootstrapping
+require_once 'lib/bootstrap.php';
 
 // Basic HTTP router
-
 $res = new Response();
 
-$res->setStatus(200);
+$res->setStatus('ok');
 $res->setMessage('Everything is fine');
 
-debug($res->toJson());
+//debug($res->toJson());
 
 $res->dispatch();
 
