@@ -1,3 +1,5 @@
+<?php
+
 class DB extends PDO {
 
   public function __construct($dsn, $user = null, $pass = null)
