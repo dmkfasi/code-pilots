@@ -1,6 +1,6 @@
 <?php
 
-class ApplicationException extend Exception {
+class ApplicationException extends Exception {
 
 	public function __construct($message = 'Application Error') {
 		$r = new Response();
