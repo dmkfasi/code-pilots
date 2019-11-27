@@ -3,12 +3,10 @@
 // Basic bootstrapping
 require_once 'lib/bootstrap.php';
 
-// Basic HTTP router
-$req = new Request();
-
 // Basic HTTP response
-$res = new Response();
-$res->setStatus('ok');
-$res->setMessage('Everything is fine');
+$response->setContentType('text/plain');
+$response->setStatus('ok');
+$response->setMessage('Everything is fine');
+
 $res->dispatch();
 
