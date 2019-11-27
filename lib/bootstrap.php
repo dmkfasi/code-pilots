@@ -1,14 +1,24 @@
 <?php
 
+require_once('ApplicationException.php');
 require_once('Config.php');
 require_once('DB.php');
 require_once('Request.php');
 require_once('Response.php');
 
-Config::getInstance()->load();
+// Basic objects
 
-debug($cfg->dsn);
+// Configuration singleton
+$cfg = Config::getInstance()->load();
+$db = DB::getInstance();
+
+$request = new Request();
+$response = new Response();
+
+debug($db);
 
 function debug($o) {
-	print_r("<pre>{$o}</pre>");
+	echo '<pre>';
+	print_r($o);
+	echo '</pre>';
 }
