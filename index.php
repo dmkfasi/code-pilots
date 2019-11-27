@@ -8,5 +8,5 @@ $response->setContentType('text/plain');
 $response->setStatus('ok');
 $response->setMessage('Everything is fine');
 
-$res->dispatch();
+$response->dispatch();
 
