@@ -2,14 +2,27 @@
 
 class DB extends PDO {
 
-  public function __construct($dsn, $user = null, $pass = null)
+	private static $instance = null;
+
+  public function __construct()
   {
-    parent::__construct($dsn, $user, $pass);
+		$cfg = Config::getInstance();
 
-    $this->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		// Construct DSN since ini file can't contain equal sign in a value
+		$dsn = "{$cfg->driver}:{$cfg->dbname};host={$cfg->host}";
 
-    if (version_compare(PHP_VERSION, '5.1.3', '>='))
-      $this->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
+		try {
+	    parent::__construct($sn, $cfg->username, $cfg->password);
+		} catch (PDOException $e) {
+			throw new ApplicationException('Unable to instantiate PDO driver: ' . $e->getMessage());
+		}
   }
 
+	public static function getInstance() {
+		if (self::$instance === null) {
+			self::$instance = new DB();
+		}
+
+		return self::$instance;
+	}
 }
