@@ -1,7 +1,9 @@
 <?php
 
+// Refactor: add autoloader
 require_once('ApplicationException.php');
 require_once('Config.php');
+require_once('Context.php');
 require_once('DB.php');
 require_once('Request.php');
 require_once('Response.php');
@@ -12,13 +14,14 @@ require_once('Response.php');
 $cfg = Config::getInstance()->load();
 $db = DB::getInstance();
 
-$request = new Request();
+$request = new Request(new Context());
 $response = new Response();
 
-debug($db);
+$response->setPayload($request->getContent());
+//$db->getResults('SELECT * FROM News WHERE ID = :ID', [ 'ID' => 1 ]);
 
 function debug($o) {
-	echo '<pre>';
-	print_r($o);
-	echo '</pre>';
+	$response = new Response();
+	$response->setPayload([$o]);
+	$response->dispatch();
 }
