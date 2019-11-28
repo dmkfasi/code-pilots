@@ -7,9 +7,11 @@ class Context {
 	private $path = '';
 	private $method = '';
 
-	private $action = '';
-	private $subject = '';
-	private $args = '';
+	private $action = null;
+	private $subject = null;
+	private $args = null;
+
+	private $content = null;
 
 	public function __construct() {
 		$this->setRequestMethod();
@@ -44,10 +46,6 @@ class Context {
 		$this->path = trim($uri, '/');
 	}
 
-	public function setRoute() {
-		list($this->action, $this->subject, $this->args) = explode('/', $this->path);
-	}
-
 	public function getAction() {
 		return $this->action;
 	}
@@ -58,5 +56,19 @@ class Context {
 
 	public function getArgs() {
 		return $this->args;
+	}
+
+	// Sets attributes to run an application
+	// TODO refactor
+	public function setRoute() {
+		list($this->action, $this->subject, $this->args) = explode('/', $this->path);
+	}
+
+	public function getContent() {
+		return $this->content;
+	}
+
+	public function setContent($content) {
+		$this->content = $content;
 	}
 }
