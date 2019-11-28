@@ -2,6 +2,8 @@
 
 class Request {
 
+	protected $context = null;
+
 	public function __construct(Context $ctx) {
 		$this->context = $ctx;
 
@@ -22,7 +24,18 @@ class Request {
 	}
 
 	private function runPost() {
-		debug($this->context->getAction());
+		$obj_name = 'App' . $this->context->getAction();
+
+		if (class_exists($obj_name)) {
+			$app = new $obj_name();
+			$app->table = $this->context->getSubject();
+			$app->id = $this->context->getArgs();
+
+			// Assert App content into context for output
+			$this->context->setContent($app->getContent());
+		} else {
+			throw new ApplicationException('Requested method not found');
+		}
 	}
 
 }
