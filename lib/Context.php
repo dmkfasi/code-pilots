@@ -9,9 +9,14 @@ class Context {
 
 	private $action = null;
 	private $subject = null;
-	private $args = null;
+	private $argv = null;
 
 	private $content = null;
+
+	// TODO refactor to Config or DB or whatever
+	private $action_list = [
+		'Table', 'SessionSubscribe',
+		];
 
 	public function __construct() {
 		$this->setRequestMethod();
@@ -44,6 +49,9 @@ class Context {
 		// Strip out 'api' part
 		$uri = str_replace('api', '', $this->uri);
 		$this->path = trim($uri, '/');
+
+		// Get action that is coming from Query String
+		list($this->action) = explode('/', $this->path);
 	}
 
 	public function getAction() {
@@ -55,13 +63,26 @@ class Context {
 	}
 
 	public function getArgs() {
-		return $this->args;
+		return $this->argv;
 	}
 
-	// Sets attributes to run an application
+	public function getArg(string $arg_name) {
+		if (isset($this->argv[$arg_name])) {
+			return $this->argv[$arg_name];
+		} else {
+			return false;
+		}
+	}
+
+	// Sets argument vector to run an application
 	// TODO refactor
 	public function setRoute() {
-		list($this->action, $this->subject, $this->args) = explode('/', $this->path);
+		// Collect all the arguments and lightly sanitize them
+		foreach ($_POST as $k => $v) {
+			if (!empty($v)) {
+				$this->argv[$k] = htmlspecialchars($v);
+			}
+		}
 	}
 
 	public function getContent() {
