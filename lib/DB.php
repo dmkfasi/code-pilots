@@ -26,9 +26,9 @@ class DB extends PDO {
 		return self::$instance;
 	}
 
-	public function execute(string $sql, array $params = []) {
+	public function runQuery(string $sql, array $params = []) {
     try {
-      $sth = $this->prepare($sql);                                                                                                                                           
+      $sth = $this->prepare($sql);
       $sth->execute($params);
     } catch (PDOException $e) {
       throw new ApplicationException('Unable to prepare SQL: ' . $e->getMessage());
@@ -38,7 +38,7 @@ class DB extends PDO {
 	}
 
   public function getResults(string $sql, array $params = []) {
-    $sth = $this->execute($sql, $params);
+    $sth = $this->runQuery($sql, $params);
 
 		return $sth->fetchAll(PDO::FETCH_ASSOC);
   }
