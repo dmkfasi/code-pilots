@@ -27,9 +27,8 @@ class Request {
 		$obj_name = 'App' . $this->context->getAction();
 
 		if (class_exists($obj_name)) {
-			$app = new $obj_name();
-			$app->table = $this->context->getSubject();
-			$app->id = $this->context->getArgs();
+			// Pass by flow Context to the Object
+			$app = new $obj_name($this->context);
 
 			// Assert App content into context for output
 			$this->context->setContent($app->getContent());
