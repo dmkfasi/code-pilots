@@ -1,27 +1,40 @@
 <?php
 
-// Refactor: add autoloader
-require_once('ApplicationException.php');
-require_once('Config.php');
-require_once('Context.php');
-require_once('DB.php');
-require_once('Request.php');
-require_once('Response.php');
+// Load core components in the first place
+require_once 'lib/ApplicationException.php';
+
+// TODO refactor me
+spl_autoload_register(function ($class) {
+	// Application classes are in separate folder
+	$file_path = (strpos($class, 'App') === 0) ? "app/{$class}.php" : "lib/{$class}.php";
+
+	if (is_readable($file_path)) {
+		require_once $file_path;
+	} else {
+		// TODO logging
+		throw new ApplicationException("Unable to load component required {$class}");
+	}
+
+});
 
 // Basic objects
 
 // Configuration singleton
 $cfg = Config::getInstance()->load();
-$db = DB::getInstance();
 
-$request = new Request(new Context());
+// Flow context
+$ctx = new Context();
+
+$request = new Request($ctx);
+
 $response = new Response();
-
-$response->setPayload($request->getContent());
-//$db->getResults('SELECT * FROM News WHERE ID = :ID', [ 'ID' => 1 ]);
+$response->setup($ctx);
 
 function debug($o) {
-	$response = new Response();
-	$response->setPayload([$o]);
-	$response->dispatch();
+	$r = new Response();
+	$r->setStatus('debug');
+	$r->setContentType('text/plain');
+	$r->setPayload(print_r($o, true));
+	$r->setMessage('Debug function called');
+	$r->dispatch();
 }
